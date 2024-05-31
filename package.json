@@ -4,7 +4,7 @@
   "description": "Frontend template to quickly start projects with webpack, ESLint and prettier.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
     "watch": "webpack --watch",
     "start": "webpack serve --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
