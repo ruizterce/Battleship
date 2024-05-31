@@ -1,6 +1,7 @@
 module.exports = {
   transform: {
-    '^.+\\.js$': 'babel-jest'
+    '^.+\\.js$': 'babel-jest',
+    '^.+\\.mjs$': 'babel-jest'
   },
   testEnvironment: 'node',
   moduleDirectories: ['node_modules', 'src'],
