@@ -7,26 +7,54 @@ export default class Gameboard {
     this.missedAttacks = [];
   }
 
+  // Place a ship 'H'orizontally or 'V'ertically
   place(x, y, length, direction) {
+    // Add the ship object to ships
     let ship = new Ship(length);
     this.ships.push(ship);
 
+    // Place pointers to the ship object in the occupied coordinates
     for (let i = 0; i < length; i++) {
-      if (direction === 'H') {
-        this.pointers.push(new pointer(x + i, y, ship));
-      } else if (direction === 'V') {
-        this.pointers.push(new pointer(x, y + i, ship));
+      this.pointers.push(
+        new pointer(direction === 'H' ? x + i : x, direction === 'V' ? y + i : y, ship)
+      );
+    }
+  }
+
+  // Receive enemy attack, return true if shot is valid, false if not
+  receiveAttack(x, y) {
+    // Hit a pointer if it's not already shot
+    const pointer = this.containsPointer(x, y);
+    if (pointer != undefined) {
+      if (!pointer.shot) {
+        pointer.hit();
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // Hit a missing area if it was not already shot
+      if (!this.containsMissedAttack(x, y)) {
+        this.missedAttacks.push([x, y]);
+        return true;
+      } else {
+        return false;
       }
     }
   }
 
-  receiveAttack(x, y) {
-    const pointer = this.pointers.find((item) => item.x === x && item.y === y) || null;
-    if (pointer != null) {
-      pointer.parent.hit();
-    } else {
-      this.missedAttacks.push([x, y]);
-    }
+  containsPointer(x, y) {
+    return this.pointers.find((pointer) => pointer.x === x && pointer.y === y);
+  }
+
+  containsMissedAttack(x, y) {
+    return this.missedAttacks.find(
+      (missedAttack) => missedAttack[0] === x && missedAttack[1] === y
+    );
+  }
+
+  checkAllSunk() {
+    return this.ships.every((ship) => ship.isSunk());
   }
 }
 
@@ -35,5 +63,11 @@ class pointer {
     this.x = x;
     this.y = y;
     this.parent = parent;
+    this.shot = false;
+  }
+
+  hit() {
+    this.shot = true;
+    this.parent.hit();
   }
 }

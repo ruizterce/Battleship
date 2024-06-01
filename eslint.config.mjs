@@ -7,7 +7,7 @@ import htmlPlugin from 'eslint-plugin-html';
 
 export default [
   {
-    files: ['**/*.js'],
+    files: ['**/*.js', '**/*.mjs'],
     languageOptions: {
       sourceType: 'module',
       parser: babelParser,

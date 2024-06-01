@@ -26,27 +26,29 @@ describe('Gameboard class', () => {
     gameboard.place(2, 2, 2, 'H');
     expect(placeSpy).toHaveBeenCalled();
     expect(gameboard.pointers).toEqual([
-      { x: 2, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 } },
-      { x: 3, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 } }
+      { x: 2, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 }, shot: false },
+      { x: 3, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 }, shot: false }
     ]);
     gameboard.place(0, 0, 4, 'V');
     expect(placeSpy).toHaveBeenCalled();
     expect(gameboard.pointers).toEqual([
-      { x: 2, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 } },
-      { x: 3, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 } },
-      { x: 0, y: 0, parent: { length: 4, sunk: false, hitCounter: 0 } },
-      { x: 0, y: 1, parent: { length: 4, sunk: false, hitCounter: 0 } },
-      { x: 0, y: 2, parent: { length: 4, sunk: false, hitCounter: 0 } },
-      { x: 0, y: 3, parent: { length: 4, sunk: false, hitCounter: 0 } }
+      { x: 2, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 }, shot: false },
+      { x: 3, y: 2, parent: { length: 2, sunk: false, hitCounter: 0 }, shot: false },
+      { x: 0, y: 0, parent: { length: 4, sunk: false, hitCounter: 0 }, shot: false },
+      { x: 0, y: 1, parent: { length: 4, sunk: false, hitCounter: 0 }, shot: false },
+      { x: 0, y: 2, parent: { length: 4, sunk: false, hitCounter: 0 }, shot: false },
+      { x: 0, y: 3, parent: { length: 4, sunk: false, hitCounter: 0 }, shot: false }
     ]);
   });
 
-  test('.receiveAttack() looks for a pointer in the given coordinates and hits a ship', () => {
+  test('.receiveAttack() looks for a pointer in the given coordinates and hits it', () => {
     const gameboard = new Gameboard();
     gameboard.place(2, 2, 2, 'H');
     expect(gameboard.ships[0].hitCounter).toEqual(0);
+    expect(gameboard.containsPointer(3, 2).shot).toBe(false);
     gameboard.receiveAttack(3, 2);
     expect(gameboard.ships[0].hitCounter).toEqual(1);
+    expect(gameboard.containsPointer(3, 2).shot).toBe(true);
   });
 
   test('.receiveAttack() hits a ship several times and sinks it', () => {
