@@ -8,15 +8,52 @@ const gameContainer = document.querySelector('.game-container');
 const p1 = new Player(false);
 const p2 = new Player(true);
 
-// Placeholder ship placement
-p1.gameboard.place(0, 0, 3, 'H');
-p1.gameboard.place(0, 2, 2, 'V');
-p2.gameboard.place(5, 5, 3, 'H');
-p2.gameboard.place(5, 6, 2, 'V');
+// Place ships
+async function placeShips() {
+  let activePlayer;
+  let direction = 'H';
+  do {
+    activePlayer = activePlayer === p1 ? p2 : p1;
+    do {
+      if (activePlayer.isCpu === false) {
+        // Human places ships
+        ui.renderPlacingBoard(gameContainer, activePlayer);
+        let validPlacing;
+        do {
+          validPlacing = await ui.placeListener(
+            activePlayer,
+            activePlayer.ships[activePlayer.ships.length - 1],
+            direction
+          );
+        } while (!validPlacing);
+        activePlayer.ships.pop();
+      } else {
+        // Computer places ships
+        cpuPlaces();
+      }
+    } while (activePlayer.ships.length > 0);
+    console.log(p1.ships.length, p2.ships.length);
+  } while (p1.ships.length > 0 || p2.ships.length > 0);
 
-p1.gameboard.receiveAttack(1, 1);
-p2.gameboard.receiveAttack(4, 4);
-console.log(p2.gameboard);
+  function cpuPlaces() {
+    let placeX;
+    let placeY;
+    let validPlacing;
+    do {
+      placeX = Math.floor(Math.random() * 10);
+      placeY = Math.floor(Math.random() * 10);
+      direction = Math.random() > 0.5 ? 'V' : 'H';
+      console.log('Placing ' + placeX + ', ' + placeY);
+      validPlacing = activePlayer.gameboard.place(
+        placeX,
+        placeY,
+        activePlayer.ships[activePlayer.ships.length - 1],
+        direction
+      );
+    } while (!validPlacing);
+    activePlayer.ships.pop();
+  }
+}
 
 // Game loop
 async function gameLoop() {
@@ -61,4 +98,5 @@ async function gameLoop() {
     } while (!validShot);
   }
 }
+await placeShips();
 gameLoop();

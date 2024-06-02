@@ -6,12 +6,24 @@ export default class DOMController {
     }
   }
 
-  renderBoard(parentElement, player, enemy) {
+  // General board rendering
+  renderBoard(parentElement, player, enemy = null, isPlacing = false) {
     parentElement.innerHTML = '';
 
-    function createBoard(gameboard, isEnemy = false) {
+    // Create a board
+    const createBoard = (gameboard, isEnemy = false) => {
+      const boardContainer = document.createElement('div');
+
+      const boardTitle = document.createElement('h2');
+      boardTitle.textContent = isPlacing
+        ? 'Place your ships'
+        : isEnemy
+          ? "Enemy's waters"
+          : "Player's waters";
+      boardContainer.appendChild(boardTitle);
+
       const board = document.createElement('div');
-      if (isEnemy) board.classList.add('enemy-board');
+      board.classList.add(isPlacing ? 'placing-board' : isEnemy ? 'enemy-board' : 'player-board');
       for (let i = 0; i < 10; i++) {
         const row = document.createElement('div');
         for (let j = 0; j < 10; j++) {
@@ -37,20 +49,26 @@ export default class DOMController {
         }
         board.appendChild(row);
       }
-      return board;
-    }
+      boardContainer.appendChild(board);
+      return boardContainer;
+    };
 
+    // Render player's board
     const myBoard = createBoard(player.gameboard);
     parentElement.appendChild(myBoard);
 
-    const separator = document.createElement('div');
-    separator.style.height = '20px';
-    parentElement.appendChild(separator);
+    // If not in placing mode, render enemy's board
+    if (!isPlacing && enemy) {
+      const separator = document.createElement('div');
+      separator.style.height = '20px';
+      parentElement.appendChild(separator);
 
-    const enemyBoard = createBoard(enemy.gameboard, true);
-    parentElement.appendChild(enemyBoard);
+      const enemyBoard = createBoard(enemy.gameboard, true);
+      parentElement.appendChild(enemyBoard);
+    }
   }
 
+  // Click listener in enemy's board for attacking
   attackListener(enemy) {
     const enemyBoard = document.querySelector('.enemy-board');
     return new Promise((resolve) => {
@@ -64,6 +82,29 @@ export default class DOMController {
         resolve(validShot);
       };
       enemyBoard.addEventListener('click', onClick);
+    });
+  }
+
+  // Render the placing board for a player
+  renderPlacingBoard(parentElement, player) {
+    this.renderBoard(parentElement, player, null, true);
+  }
+
+  // Click listener for placing ships
+  placeListener(player, shipLength, direction) {
+    const board = document.querySelector('.placing-board');
+
+    return new Promise((resolve) => {
+      const onClick = (e) => {
+        if (!e.target.dataset.coordinates) {
+          return false;
+        }
+        const [x, y] = e.target.dataset.coordinates.split(',').map(Number);
+        let validPlacing = player.gameboard.place(x, y, shipLength, direction);
+        board.removeEventListener('click', onClick);
+        resolve(validPlacing);
+      };
+      board.addEventListener('click', onClick);
     });
   }
 }

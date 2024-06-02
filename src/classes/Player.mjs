@@ -5,5 +5,6 @@ export default class Player {
     this.isCpu = isCpu;
     this.name = this.isCpu ? 'Computer' : 'Player';
     this.gameboard = new Gameboard();
+    this.ships = [5, 4, 3, 3, 2];
   }
 }

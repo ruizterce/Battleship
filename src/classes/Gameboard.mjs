@@ -9,6 +9,24 @@ export default class Gameboard {
 
   // Place a ship 'H'orizontally or 'V'ertically
   place(x, y, length, direction) {
+    let alreadyOccupied;
+    for (let i = 0; i < length; i++) {
+      if (direction === 'H') {
+        let targetX = x + i;
+        let targetY = y;
+        alreadyOccupied = this.containsPointer(targetX, targetY);
+        if (alreadyOccupied != undefined || targetX > 9) {
+          return false;
+        }
+      } else if (direction === 'V') {
+        let targetX = x;
+        let targetY = y + i;
+        alreadyOccupied = this.containsPointer(targetX, targetY);
+        if (alreadyOccupied != undefined || targetY > 9) {
+          return false;
+        }
+      }
+    }
     // Add the ship object to ships
     let ship = new Ship(length);
     this.ships.push(ship);
@@ -19,6 +37,7 @@ export default class Gameboard {
         new pointer(direction === 'H' ? x + i : x, direction === 'V' ? y + i : y, ship)
       );
     }
+    return true;
   }
 
   // Receive enemy attack, return true if shot is valid, false if not
