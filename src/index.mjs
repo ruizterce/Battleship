@@ -97,4 +97,6 @@ async function gameLoop() {
   }
 }
 await placeShips();
+await ui.fadeIn(document.querySelector('body'));
 gameLoop();
+await ui.fadeOut(document.querySelector('body'));

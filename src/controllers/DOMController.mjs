@@ -182,4 +182,34 @@ export default class DOMController {
       button.classList.remove('highlight-error');
     });
   }
+
+  // Screen transition functions
+  fadeIn(parentContainer) {
+    return new Promise((resolve) => {
+      const transitionContainer = document.createElement('div');
+      transitionContainer.className = 'fullscreen-transition';
+
+      const text = document.createElement('div');
+      text.textContent = 'Deploying troops';
+      text.className = 'deploying-text';
+      transitionContainer.appendChild(text);
+
+      parentContainer.appendChild(transitionContainer);
+      transitionContainer.offsetHeight;
+      transitionContainer.classList.add('visible');
+      setTimeout(resolve, 1000);
+    });
+  }
+
+  fadeOut(parentContainer) {
+    return new Promise((resolve) => {
+      const transitionContainer = parentContainer.querySelector('.fullscreen-transition');
+
+      transitionContainer.classList.remove('visible');
+      setTimeout(() => {
+        parentContainer.removeChild(transitionContainer);
+        resolve();
+      }, 1000);
+    });
+  }
 }
