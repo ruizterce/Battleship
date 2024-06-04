@@ -9,6 +9,23 @@ export default class Gameboard {
 
   // Place a ship 'H'orizontally or 'V'ertically
   place(x, y, length, direction) {
+    if (!this.isValidPlace(x, y, length, direction)) {
+      return false;
+    }
+    // Add the ship object to ships
+    let ship = new Ship(length);
+    this.ships.push(ship);
+
+    // Place pointers to the ship object in the occupied coordinates
+    for (let i = 0; i < length; i++) {
+      this.pointers.push(
+        new pointer(direction === 'H' ? x + i : x, direction === 'V' ? y + i : y, ship)
+      );
+    }
+    return true;
+  }
+
+  isValidPlace(x, y, length, direction) {
     let alreadyOccupied;
     for (let i = 0; i < length; i++) {
       if (direction === 'H') {
@@ -26,16 +43,6 @@ export default class Gameboard {
           return false;
         }
       }
-    }
-    // Add the ship object to ships
-    let ship = new Ship(length);
-    this.ships.push(ship);
-
-    // Place pointers to the ship object in the occupied coordinates
-    for (let i = 0; i < length; i++) {
-      this.pointers.push(
-        new pointer(direction === 'H' ? x + i : x, direction === 'V' ? y + i : y, ship)
-      );
     }
     return true;
   }
