@@ -1,11 +1,4 @@
 export default class DOMController {
-  updateText(selector, text) {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.textContent = text;
-    }
-  }
-
   // General board rendering
   renderBoard(parentElement, player, enemy = null, isPlacing = false) {
     const directionBtn = document.querySelector('.direction-btn') || null;
@@ -15,6 +8,7 @@ export default class DOMController {
     // Create a board
     const createBoard = (gameboard, isEnemy = false) => {
       const boardContainer = document.createElement('div');
+      boardContainer.classList.add('board-container');
 
       const boardTitle = document.createElement('h2');
       boardTitle.textContent = isPlacing
@@ -48,8 +42,8 @@ export default class DOMController {
         const row = document.createElement('div');
         for (let j = 0; j < 10; j++) {
           const square = document.createElement('button');
-          square.dataset.coordinates = `${j},${i}`;
-          const pointer = gameboard.containsPointer(j, i);
+          square.dataset.coordinates = `${i},${j}`;
+          const pointer = gameboard.containsPointer(i, j);
           if (pointer) {
             if (pointer.shot) {
               square.textContent = 'H';
@@ -108,6 +102,10 @@ export default class DOMController {
   // Render the placing board for a player
   renderPlacingBoard(parentElement, player) {
     this.renderBoard(parentElement, player, null, true);
+    const currentShipLength = player.ships[player.ships.length - 1];
+    this.addHoverEffect(player, currentShipLength);
+    console.log(player);
+    console.log(currentShipLength);
   }
 
   // Click listener for placing ships
@@ -127,6 +125,63 @@ export default class DOMController {
         resolve(validPlacing);
       };
       board.addEventListener('click', onClick);
+    });
+  }
+
+  // Hover effect to visualize ship length and direction on Ship Placing Stage
+  addHoverEffect(player, shipLength) {
+    const board = document.querySelector('.placing-board');
+    const buttons = board.querySelectorAll('button');
+
+    buttons.forEach((button) => {
+      button.addEventListener('mouseenter', (e) => {
+        const [x, y] = e.target.dataset.coordinates.split(',').map(Number);
+        const directionBtn = document.querySelector('.direction-btn');
+        const direction = directionBtn.dataset.direction;
+        this.highlightAdjacentButtons(player, x, y, shipLength, direction);
+      });
+
+      button.addEventListener('mouseleave', () => {
+        this.removeHighlight();
+      });
+    });
+  }
+
+  highlightAdjacentButtons(player, x, y, length, direction) {
+    for (let i = 0; i < length; i++) {
+      let targetX = x;
+      let targetY = y;
+      if (direction === 'H') {
+        targetX += i;
+      } else {
+        targetY += i;
+      }
+
+      let classToAdd;
+      if (player.gameboard.isValidPlace(x, y, length, direction)) {
+        classToAdd = 'highlight';
+      } else {
+        classToAdd = 'highlight-error';
+      }
+
+      if (targetX <= 9 && targetY <= 9) {
+        const button = document.querySelector(`button[data-coordinates="${targetX},${targetY}"]`);
+        if (button) {
+          button.classList.add(classToAdd);
+        }
+      }
+    }
+  }
+
+  removeHighlight() {
+    const highlightedButtons = document.querySelectorAll('.highlight');
+    highlightedButtons.forEach((button) => {
+      button.classList.remove('highlight');
+    });
+
+    const highlightedErrorButtons = document.querySelectorAll('.highlight-error');
+    highlightedErrorButtons.forEach((button) => {
+      button.classList.remove('highlight-error');
     });
   }
 }

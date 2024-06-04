@@ -1,0 +1,111 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    --background-color: #1e1e1e;
+    --text-color: #ffffff;
+    --primary-color: #00b4d8;
+    --hover-background-color: #00b4d8;
+    --hover-text-color: #1e1e1e;
+    --shadow-color: #000000;
+    --error-color: #fc6868;
+}
+
+.game-title {
+    font-size: 48px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    text-shadow: 2px 2px 4px var(--shadow-color);
+    margin-bottom: 30px;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.direction-btn {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+
+.direction-btn:hover {
+    background: var(--hover-background-color);
+    color: var(--hover-text-color);
+}
+
+.placing-board,
+.player-board,
+.enemy-board {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
+    grid-gap: 5px;
+}
+
+.placing-board button,
+.player-board button,
+.enemy-board button {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    border: none;
+    box-shadow: 0 0 0 5px var(--text-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.placing-board button:hover,
+.player-board button:hover,
+.enemy-board button:hover {
+    background: var(--hover-background-color);
+    color: var(--hover-text-color);
+}
+
+.placing-board button.highlight {
+    background-color: var(--primary-color);
+    color: var(--hover-text-color);
+}
+
+.placing-board button.highlight-error {
+    background-color: var(--error-color);
+    color: var(--hover-text-color);
+}
