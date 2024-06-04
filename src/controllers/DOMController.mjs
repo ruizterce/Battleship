@@ -46,18 +46,16 @@ export default class DOMController {
           const pointer = gameboard.containsPointer(i, j);
           if (pointer) {
             if (pointer.shot) {
-              square.textContent = 'H';
-              square.style.backgroundColor = 'red';
+              square.classList.add('hit');
             } else if (!isEnemy) {
-              square.textContent = 'X';
+              square.classList.add('ally-ship');
             } else {
-              square.textContent = 'O';
+              square.classList.add('water');
             }
-          } else if (gameboard.containsMissedAttack(j, i)) {
-            square.textContent = 'M';
-            square.style.backgroundColor = 'blue';
+          } else if (gameboard.containsMissedAttack(i, j)) {
+            square.classList.add('miss');
           } else {
-            square.textContent = 'O';
+            square.classList.add('water');
           }
           row.appendChild(square);
         }
