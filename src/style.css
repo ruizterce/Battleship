@@ -2,7 +2,6 @@ body,
 html {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
@@ -16,6 +15,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
 
     --background-color: #1e1e1e;
     --text-color: #ffffff;
@@ -24,6 +24,13 @@ body {
     --hover-text-color: #1e1e1e;
     --shadow-color: #000000;
     --error-color: #fc6868;
+    --water-color: #0068c9;
+    --hit-color: #ff0000;
+    --spark-color: #ff3c00;
+    --smoke-color: #00000080;
+    --ship-color: #4e4e4e;
+    --miss-color: #00b7ff;
+    --crosshair-color: #00ff22;
 }
 
 .game-title {
@@ -37,7 +44,7 @@ body {
 
 .game-container {
     display: flex;
-    flex-direction: column;
+    gap: 20px;
     align-items: center;
 }
 
@@ -75,7 +82,16 @@ h2 {
     display: grid;
     grid-template-columns: repeat(10, 40px);
     grid-template-rows: repeat(10, 40px);
-    grid-gap: 5px;
+    background-color: var(--water-color);
+}
+
+.placing-board,
+.player-board {
+    border: 4px solid var(--primary-color);
+}
+
+.enemy-board {
+    border: 4px solid var(--hit-color);
 }
 
 .placing-board button,
@@ -85,27 +101,52 @@ h2 {
     height: 40px;
     padding: 5px;
     border: none;
-    box-shadow: 0 0 0 5px var(--text-color);
+    box-shadow: 0 0 0 2px var(--text-color);
     background-color: var(--background-color);
     color: var(--text-color);
-    cursor: pointer;
     font-size: 18px;
-    transition: background 0.3s, color 0.3s;
 }
 
-.placing-board button:hover,
-.player-board button:hover,
-.enemy-board button:hover {
+.placing-board button:hover {
     background: var(--hover-background-color);
-    color: var(--hover-text-color);
 }
 
 .placing-board button.highlight {
     background-color: var(--primary-color);
-    color: var(--hover-text-color);
 }
 
 .placing-board button.highlight-error {
     background-color: var(--error-color);
-    color: var(--hover-text-color);
+}
+
+button.water {
+    background-color: var(--water-color);
+}
+
+.enemy-board button.water:hover {
+    background-color: inherit;
+    background: radial-gradient(circle, var(--crosshair-color) 0%, transparent 10%, var(--crosshair-color) 20%,
+            var(--water-color) 30%, var(--crosshair-color) 40%, var(--water-color) 50%);
+    cursor: crosshair;
+}
+
+button.hit {
+    background: var(--hit-color);
+    background: radial-gradient(circle, var(--hit-color) 0%, var(--spark-color) 50%, var(--ship-color) 100%);
+    cursor: not-allowed;
+}
+
+button.miss {
+    background-image: radial-gradient(circle at center center, #0084ff, #00b4d8), repeating-radial-gradient(circle at center center, #0068c9, #43a4ff, 2px, transparent 3px, transparent 6px);
+    background-blend-mode: multiply;
+    background-color: #00b4d8;
+    cursor: not-allowed;
+}
+
+button.ally-ship {
+    background-color: var(--ship-color);
+}
+
+.player-board button:hover {
+    cursor: not-allowed;
 }
