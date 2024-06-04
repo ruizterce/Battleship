@@ -8,6 +8,8 @@ export default class DOMController {
 
   // General board rendering
   renderBoard(parentElement, player, enemy = null, isPlacing = false) {
+    const directionBtn = document.querySelector('.direction-btn') || null;
+    const direction = directionBtn ? directionBtn.dataset.direction : 'H';
     parentElement.innerHTML = '';
 
     // Create a board
@@ -21,6 +23,24 @@ export default class DOMController {
           ? "Enemy's waters"
           : "Player's waters";
       boardContainer.appendChild(boardTitle);
+
+      if (isPlacing) {
+        const directionBtn = document.createElement('button');
+        directionBtn.classList.add('direction-btn');
+        directionBtn.textContent = direction === 'H' ? 'Horizontal' : 'Vertical';
+        directionBtn.dataset.direction = direction;
+        directionBtn.addEventListener('click', changeDirection);
+        boardContainer.appendChild(directionBtn);
+        function changeDirection() {
+          if (directionBtn.textContent === 'Horizontal') {
+            directionBtn.textContent = 'Vertical';
+            directionBtn.dataset.direction = 'V';
+          } else {
+            directionBtn.textContent = 'Horizontal';
+            directionBtn.dataset.direction = 'H';
+          }
+        }
+      }
 
       const board = document.createElement('div');
       board.classList.add(isPlacing ? 'placing-board' : isEnemy ? 'enemy-board' : 'player-board');
@@ -91,7 +111,7 @@ export default class DOMController {
   }
 
   // Click listener for placing ships
-  placeListener(player, shipLength, direction) {
+  placeListener(player, shipLength) {
     const board = document.querySelector('.placing-board');
 
     return new Promise((resolve) => {
@@ -100,6 +120,8 @@ export default class DOMController {
           return false;
         }
         const [x, y] = e.target.dataset.coordinates.split(',').map(Number);
+        const directionBtn = document.querySelector('.direction-btn');
+        const direction = directionBtn.dataset.direction;
         let validPlacing = player.gameboard.place(x, y, shipLength, direction);
         board.removeEventListener('click', onClick);
         resolve(validPlacing);

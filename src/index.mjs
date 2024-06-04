@@ -11,7 +11,6 @@ const p2 = new Player(true);
 // Place ships
 async function placeShips() {
   let activePlayer;
-  let direction = 'H';
   do {
     activePlayer = activePlayer === p1 ? p2 : p1;
     do {
@@ -22,8 +21,7 @@ async function placeShips() {
         do {
           validPlacing = await ui.placeListener(
             activePlayer,
-            activePlayer.ships[activePlayer.ships.length - 1],
-            direction
+            activePlayer.ships[activePlayer.ships.length - 1]
           );
         } while (!validPlacing);
         activePlayer.ships.pop();
@@ -42,7 +40,7 @@ async function placeShips() {
     do {
       placeX = Math.floor(Math.random() * 10);
       placeY = Math.floor(Math.random() * 10);
-      direction = Math.random() > 0.5 ? 'V' : 'H';
+      const direction = Math.random() > 0.5 ? 'V' : 'H';
       console.log('Placing ' + placeX + ', ' + placeY);
       validPlacing = activePlayer.gameboard.place(
         placeX,
