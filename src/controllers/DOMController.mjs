@@ -212,4 +212,31 @@ export default class DOMController {
       }, 1000);
     });
   }
+
+  gameEndTransition(parentContainer, winner) {
+    const transitionContainer = document.createElement('div');
+    transitionContainer.className = 'game-end-transition';
+
+    const text = document.createElement('div');
+    text.className = 'game-end-text';
+    if (winner.isCpu) {
+      text.textContent = 'You were defeated';
+      transitionContainer.style.backgroundColor = 'rgb(255, 0, 0, .8)';
+    } else {
+      text.textContent = 'You won the battle';
+      transitionContainer.style.backgroundColor = 'rgb(0, 255, 0, .8)';
+    }
+    transitionContainer.appendChild(text);
+    const button = document.createElement('button');
+    button.textContent = 'Restart';
+    button.className = 'game-end-button';
+    button.addEventListener('click', () => {
+      location.reload();
+    });
+    transitionContainer.appendChild(button);
+
+    parentContainer.appendChild(transitionContainer);
+    transitionContainer.offsetHeight;
+    transitionContainer.classList.add('visible');
+  }
 }

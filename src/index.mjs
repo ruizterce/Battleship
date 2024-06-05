@@ -7,6 +7,7 @@ const gameContainer = document.querySelector('.game-container');
 
 const p1 = new Player(false);
 const p2 = new Player(true);
+let winner;
 
 // Place ships
 async function placeShips() {
@@ -77,7 +78,9 @@ async function gameLoop() {
 
     if (enemyPlayer.gameboard.checkAllSunk()) {
       gameEnded = true;
+      winner = activePlayer;
       ui.renderBoard(gameContainer, activePlayer, enemyPlayer);
+      ui.gameEndTransition(gameContainer, winner);
     }
   } while (!gameEnded);
 
