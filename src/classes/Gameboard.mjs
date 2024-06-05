@@ -49,12 +49,13 @@ export default class Gameboard {
 
   // Receive enemy attack, return true if shot is valid, false if not
   receiveAttack(x, y) {
+    if (x < 0 || x > 9 || y < 0 || y > 9) return false;
     // Hit a pointer if it's not already shot
     const pointer = this.containsPointer(x, y);
     if (pointer != undefined) {
       if (!pointer.shot) {
         pointer.hit();
-        return true;
+        return 'hit';
       } else {
         return false;
       }
@@ -62,7 +63,7 @@ export default class Gameboard {
       // Hit a missing area if it was not already shot
       if (!this.containsMissedAttack(x, y)) {
         this.missedAttacks.push([x, y]);
-        return true;
+        return 'miss';
       } else {
         return false;
       }
