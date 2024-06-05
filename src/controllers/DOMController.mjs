@@ -190,7 +190,7 @@ export default class DOMController {
       transitionContainer.className = 'fullscreen-transition';
 
       const text = document.createElement('div');
-      text.textContent = 'Deploying troops';
+      text.textContent = 'Deploying Fleet';
       text.className = 'deploying-text';
       transitionContainer.appendChild(text);
 
