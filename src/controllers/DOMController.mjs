@@ -14,8 +14,8 @@ export default class DOMController {
       boardTitle.textContent = isPlacing
         ? 'Place your ships'
         : isEnemy
-          ? "Enemy's waters"
-          : "Player's waters";
+          ? 'Enemy waters'
+          : 'Ally waters';
       boardContainer.appendChild(boardTitle);
 
       if (isPlacing) {
