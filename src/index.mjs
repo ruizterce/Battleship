@@ -79,7 +79,7 @@ async function gameLoop() {
     if (enemyPlayer.gameboard.checkAllSunk()) {
       gameEnded = true;
       winner = activePlayer;
-      ui.renderBoard(gameContainer, activePlayer, enemyPlayer);
+      ui.renderBoard(gameContainer, p1, p2);
       ui.gameEndTransition(gameContainer, winner);
     }
   } while (!gameEnded);
