@@ -92,11 +92,35 @@ async function gameLoop() {
     let attackY;
     let validShot;
     do {
-      attackX = Math.floor(Math.random() * 10);
-      attackY = Math.floor(Math.random() * 10);
+      let attackAdjacent = 0;
+      if (activePlayer.successfulHits.length > 0) {
+        attackAdjacent = Math.random();
+      }
+      if (attackAdjacent > 0.2) {
+        const selectedHit =
+          activePlayer.successfulHits[
+            Math.floor(Math.random() * activePlayer.successfulHits.length)
+          ];
+        console.log('Selected hit ' + selectedHit);
+        console.log(selectedHit[0]);
+        console.log(selectedHit[1]);
+        if (Math.random() < 0.5) {
+          attackX = eval(selectedHit[0] + (Math.random() < 0.5 ? 1 : -1));
+          attackY = selectedHit[1];
+        } else {
+          attackX = selectedHit[0];
+          attackY = eval(selectedHit[1] + (Math.random() < 0.5 ? 1 : -1));
+        }
+      } else {
+        attackX = Math.floor(Math.random() * 10);
+        attackY = Math.floor(Math.random() * 10);
+      }
       console.log('Shooting ' + attackX + ', ' + attackY);
       validShot = enemyPlayer.gameboard.receiveAttack(attackX, attackY);
     } while (!validShot);
+    if (validShot === 'hit') {
+      activePlayer.successfulHits.push([attackX, attackY]);
+    }
   }
 }
 await placeShips();
